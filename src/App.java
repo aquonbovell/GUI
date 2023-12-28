@@ -1,25 +1,22 @@
-import java.awt.FlowLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-
+// This is a Java class named App
 public class App {
-    public static void main(String[] args) throws Exception {
-        System.out.println("Hello, World!");
+	// Private variable 'app' of type GUI
+	private GUI app;
 
-        JFrame frame = new JFrame("JFrame Example");
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout());
-        JLabel label = new JLabel("JFrame By Example");
-        JButton button = new JButton();
-        button.setText("Button");
-        panel.add(label);
-        panel.add(button);
-        frame.add(panel);
-        frame.setSize(200, 300);
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-    }
+	// The main method which is the entry point of the program
+	public static void main(String[] args) throws Exception {
+		// Creating an instance of the App class
+		App app = new App();
+		// Calling the init method on the created instance
+		app.init();
+	}
+
+	// Method to initialize the application
+	public void init() {
+		// Creating a new GUI object with a title "Data Structures: GUI" and dimensions
+		// 900x600
+		app = new GUI("Data Structures: GUI", 900, 600);
+		// Setting the visibility of the GUI to true, making it visible on the screen
+		app.setVisible(true);
+	}
 }
