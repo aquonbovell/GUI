@@ -1,15 +1,32 @@
 public class Main {
 	public static void main(String[] args) {
-		CircularLinkedList list = new CircularLinkedList();
+		// CircularLinkedList list = new CircularLinkedList();
+		Deque list = new Deque();
 		// System.out.println(list.isEmpty());
-		list.addToEnd(3);
-		// list.addToEnd(2);
+		// list.enqueue(2);
+		System.out.println(list.showNodes());
+		list.insertBack(43);
+		list.insertBack(253);
+		System.out.println(list.showNodes());
 		list.showNodes();
-		list.addToEnd(43);
+		list.insertBack(3);
+		list.insertBack(53);
+		System.out.println(list.showNodes());
+		list.insertBack(153);
+		list.insertBack(353);
 		list.showNodes();
-		list.addToEnd(53);
-		list.showNodes();
-		System.out.println("");
+		System.out.println(list.showNodes());
+		list.removeBack();
+		list.removeBack();
+		list.removeBack();
+		list.removeBack();
+		list.removeBack();
+		list.insertBack(6);
+		System.out.println(list.showNodes());
+		// list.deleteNode(43);
+		// System.out.println(list.showNodes());
+		// list.deleteNode(53);
+		// System.out.println(list.showNodes());
 		// list.addToEnd(253);
 		// list.showNodes();
 		// list.addToEnd(253);
@@ -33,10 +50,5 @@ public class Main {
 		// System.out.println(list.find(2));
 		// System.out.println(list.getHead());
 		// System.out.println(list.getTail());
-		// JFrame frame = new JFrame("JFrame Example");
-		// frame.setSize(800, 600);
-		// frame.setLocationRelativeTo(null);
-		// frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		// frame.setVisible(true);
 	}
 }

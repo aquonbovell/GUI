@@ -1,70 +1,77 @@
 public class CircularLinkedList {
-  private Node head;
+  private Node _head;
 
   public CircularLinkedList() {
-    head = null;
+    _head = null;
   }
 
   public void addToBeginning(int number) {
-    Node current = head;
-    head = new Node(number);
-    head.setNext(current);
+    Node current = _head;
+    _head = new Node(number);
+    _head.setNext(current);
   }
 
   public void addToEnd(int number) {
-    if (head == null) {
-      head = new Node(number);
-      head.setNext(head);
+    if (_head == null) {
+      _head = new Node(number);
+      _head.setNext(_head);
     } else {
       Node current;
-      for (current = head; current.getNext() != head; current = current.getNext())
+      for (current = _head; current.getNext() != _head; current = current.getNext())
         ;
       current.setNext(new Node(number));
-      current.getNext().setNext(head);
+      current.getNext().setNext(_head);
     }
   }
 
-  public void deleteNode(int value) {
+  public boolean deleteNode(int value) {
     Node current;
     Node previous;
-    if (head == null) {
-      return;
-    } else if (head.getValue() == value) {
-      head = head.getNext();
-      return;
+    if (_head == null) {
+      return false;
+    } else if (_head.getValue() == value && _head.getNext() == _head) {
+      _head = null;
+      return true;
+    } else if (_head.getValue() == value) {
+      for (current = _head; current.getNext() != _head; current = current.getNext())
+        ;
+      _head = _head.getNext();
+      current.setNext(_head);
+      return true;
     } else {
-      previous = head;
-      for (current = previous.getNext(); current != null && current.getValue() != value;) {
+      previous = _head;
+      for (current = _head.getNext(); current != _head && current.getValue() != value;) {
         current = current.getNext();
         previous = previous.getNext();
       }
-      if (current == null) {
-        System.out.println("Could not find " + value + " is this list");
+      if (current == _head) {
+        return false;
       } else {
         previous.setNext(current.getNext());
+        return true;
       }
     }
   }
 
-  public int getHead() {
-    return head.getValue();
+  public int get_Head() {
+    return _head.getValue();
   }
 
   public int getTail() {
     Node current;
-    for (current = head; current.getNext() != null; current = current.getNext())
+    for (current = _head; current.getNext() != null; current = current.getNext())
       ;
     return current.getValue();
   }
 
   public boolean find(int key) {
-    if (head == null) {
+    if (_head == null) {
       return false;
-    } else if (head.getValue() == key) {
+    } else if (_head.getValue() == key) {
       return true;
     } else {
       Node current;
-      for (current = head; current != null; current = current.getNext()) {
+      for (current = _head; current != null; current = current.getNext()) {
         if (current.getValue() == key) {
           return true;
         }
@@ -73,20 +80,52 @@ public class CircularLinkedList {
     }
   }
 
-  public void showNodes() {
-    if (head == null) {
-      System.out.println("This list is empty.");
+  // public void showNodes() {
+  // if (_head == null) {
+  // System.out.println("This list is empty.");
+  // } else {
+  // Node current;
+  // System.out.print(_head.getValue() + ", ");
+  // for (current = _head.getNext(); current != _head; current = current.getNext())
+  // {
+  // System.out.print(current.getValue() + ", ");
+  // }
+  // System.out.println("");
+  // }
+  // }
+
+  public String showNodes() {
+    if (_head == null) {
+      return ("This list is empty.");
     } else {
       Node current;
-      System.out.print(head.getValue() + ", ");
-      for (current = head.getNext(); current != head; current = current.getNext()) {
-        System.out.print(current.getValue() + ", ");
+      String result = "";
+      result += (_head.getValue() + ", ");
+      for (current = _head.getNext(); current != _head; current = current.getNext()) {
+        result += (current.getValue() + ", ");
       }
-      System.out.println("");
+      return result;
     }
   }
 
   public boolean isEmpty() {
-    return head == null;
+    return _head == null;
+  }
+
+  public int size() {
+    if (_head == null) {
+      return 0;
+    } else {
+      int count = 1;
+      Node current;
+      for (current = _head.getNext(); current != _head; current = current.getNext()) {
+        count++;
+      }
+      return count;
+    }
+  }
+
+  public void clear() {
+    _head = null;
   }
 }
