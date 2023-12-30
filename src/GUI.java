@@ -22,6 +22,7 @@ public class GUI {
   private JFrame frame;
   private JMenuBar menuBar;
   private JMenu linearADTs;
+  private JMenu hierarchicalADTs;
   private JTextField filePath;
   private JLabel fileLabel;
   private JTextArea editBox;
@@ -31,6 +32,8 @@ public class GUI {
   private Queue queue;
   private Deque deque;
   private PriortyQueue priortyQueue;
+  private BinaryTree binaryTree;
+  private BinarySearchTree binarySearchTree;
 
   // Constructor to initialize the GUI with specified title, width, and height
   public GUI(String title, int width, int height) {
@@ -41,6 +44,9 @@ public class GUI {
     queue = new Queue();
     deque = new Deque();
     priortyQueue = new PriortyQueue();
+    binaryTree = new BinaryTree();
+    binarySearchTree = new BinarySearchTree();
+
     frame = new JFrame(title);
     frame.setResizable(false);
     frame.setLayout(null); // Using null layout
@@ -49,12 +55,15 @@ public class GUI {
     menuBar = new JMenuBar();
     menuBar.add(createFileOptions());
     menuBar.add(linearADTs = new JMenu("Linear ADTs"));
+    menuBar.add(hierarchicalADTs = new JMenu("Hierarchical ADTs"));
     linearADTs.add(createLinkedListOptions());
     linearADTs.add(createCircularLinkedListOptions());
     linearADTs.add(createStackOptions());
     linearADTs.add(createQueueOptions());
     linearADTs.add(createPriortyQueueOptions());
     linearADTs.add(createDequeOptions());
+    hierarchicalADTs.add(createBinaryTreeOptions());
+    hierarchicalADTs.add(createBinarySearchTreeOptions());
     frame.setJMenuBar(menuBar);
 
     // Creating components for file path display, file label, and text editing
@@ -186,7 +195,7 @@ public class GUI {
     return stack;
   }
 
-  private JMenu createQueueOptions(){
+  private JMenu createQueueOptions() {
     JMenu queue = new JMenu("Queue");
     JMenuItem load = new JMenuItem("Load");
     JMenuItem enqueue = new JMenuItem("Enqueue");
@@ -209,8 +218,7 @@ public class GUI {
     return queue;
   }
 
-  private JMenu createDequeOptions()
-  {
+  private JMenu createDequeOptions() {
     JMenu deque = new JMenu("Deque");
     JMenuItem load = new JMenuItem("Load");
     JMenuItem insertFront = new JMenuItem("Insert Front");
@@ -238,8 +246,8 @@ public class GUI {
     display.addActionListener(e -> displayDeque());
     return deque;
   }
-  
-  private JMenu createPriortyQueueOptions(){
+
+  private JMenu createPriortyQueueOptions() {
     JMenu priortyQueue = new JMenu("Priorty Queue");
     JMenuItem load = new JMenuItem("Load");
     JMenuItem insert = new JMenuItem("Insert");
@@ -261,7 +269,59 @@ public class GUI {
     display.addActionListener(e -> displayPriortyQueue());
     return priortyQueue;
   }
-  
+
+  private JMenu createBinaryTreeOptions() {
+    JMenu binaryTree = new JMenu("Binary Tree");
+    JMenuItem load = new JMenuItem("Load");
+    JMenuItem insert = new JMenuItem("Insert");
+    JMenuItem remove = new JMenuItem("Remove");
+    JMenuItem find = new JMenuItem("Search");
+    JMenuItem inOrder = new JMenuItem("inOrder");
+    JMenuItem preOrder = new JMenuItem("preOrder");
+    JMenuItem postOrder = new JMenuItem("postOrder");
+    binaryTree.add(load);
+    binaryTree.add(insert);
+    binaryTree.add(remove);
+    binaryTree.add(find);
+    binaryTree.add(inOrder);
+    binaryTree.add(preOrder);
+    binaryTree.add(postOrder);
+    load.addActionListener(e -> loadBinaryTree());
+    insert.addActionListener(e -> insertBinaryTree());
+    remove.addActionListener(e -> removeBinaryTree());
+    find.addActionListener(e -> findBinaryTree());
+    inOrder.addActionListener(e -> inOrderBinaryTree());
+    preOrder.addActionListener(e -> preOrderBinaryTree());
+    postOrder.addActionListener(e -> postOrderBinaryTree());
+    return binaryTree;
+  }
+
+  private JMenu createBinarySearchTreeOptions() {
+    JMenu binarySearchTree = new JMenu("Binary Search Tree");
+    JMenuItem load = new JMenuItem("Load");
+    JMenuItem insert = new JMenuItem("Insert");
+    JMenuItem remove = new JMenuItem("Remove");
+    JMenuItem find = new JMenuItem("Search");
+    JMenuItem inOrder = new JMenuItem("inOrder");
+    JMenuItem preOrder = new JMenuItem("preOrder");
+    JMenuItem postOrder = new JMenuItem("postOrder");
+    binarySearchTree.add(load);
+    binarySearchTree.add(insert);
+    binarySearchTree.add(remove);
+    binarySearchTree.add(find);
+    binarySearchTree.add(inOrder);
+    binarySearchTree.add(preOrder);
+    binarySearchTree.add(postOrder);
+    load.addActionListener(e -> loadBinarySearchTree());
+    insert.addActionListener(e -> insertBinarySearchTree());
+    remove.addActionListener(e -> removeBinarySearchTree());
+    find.addActionListener(e -> findBinarySearchTree());
+    inOrder.addActionListener(e -> inOrderBinarySearchTree());
+    preOrder.addActionListener(e -> preOrderBinarySearchTree());
+    postOrder.addActionListener(e -> postOrderBinarySearchTree());
+    return binarySearchTree;
+  }
+
   // Method to handle file opening
   private void openFile() {
     JFileChooser fileChooser = new JFileChooser("./");
@@ -855,11 +915,11 @@ public class GUI {
       Object[] message = { "Please enter a number to add:", inputField };
 
       int option = JOptionPane.showConfirmDialog(
-              null,
-              message,
-              "Input",
-              JOptionPane.OK_CANCEL_OPTION,
-              JOptionPane.QUESTION_MESSAGE);
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
 
       if (option == JOptionPane.OK_OPTION) {
         String result = inputField.getText().trim();
@@ -901,11 +961,11 @@ public class GUI {
       Object[] message = { "Please enter a number to add:", inputField };
 
       int option = JOptionPane.showConfirmDialog(
-              null,
-              message,
-              "Input",
-              JOptionPane.OK_CANCEL_OPTION,
-              JOptionPane.QUESTION_MESSAGE);
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
 
       if (option == JOptionPane.OK_OPTION) {
         String result = inputField.getText().trim();
@@ -951,7 +1011,7 @@ public class GUI {
   private void loadDeque() {
     if (filePath.getText().length() < 1) {
       JOptionPane.showMessageDialog(frame, "Please select a file to open.", "Error",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.ERROR_MESSAGE);
     } else {
       try {
         List<String> lines = Files.readAllLines(Paths.get(filePath.getText()));
@@ -975,11 +1035,11 @@ public class GUI {
       Object[] message = { "Please enter a number to insert:", inputField };
 
       int option = JOptionPane.showConfirmDialog(
-              null,
-              message,
-              "Input",
-              JOptionPane.OK_CANCEL_OPTION,
-              JOptionPane.QUESTION_MESSAGE);
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
 
       if (option == JOptionPane.OK_OPTION) {
         String result = inputField.getText().trim();
@@ -1010,11 +1070,11 @@ public class GUI {
       Object[] message = { "Please enter a number to insert:", inputField };
 
       int option = JOptionPane.showConfirmDialog(
-              null,
-              message,
-              "Input",
-              JOptionPane.OK_CANCEL_OPTION,
-              JOptionPane.QUESTION_MESSAGE);
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
 
       if (option == JOptionPane.OK_OPTION) {
         String result = inputField.getText().trim();
@@ -1061,11 +1121,11 @@ public class GUI {
       Object[] message = { "Please enter a number to find:", inputField };
 
       int option = JOptionPane.showConfirmDialog(
-              null,
-              message,
-              "Input",
-              JOptionPane.OK_CANCEL_OPTION,
-              JOptionPane.QUESTION_MESSAGE);
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
 
       if (option == JOptionPane.OK_OPTION) {
         String result = inputField.getText().trim();
@@ -1107,7 +1167,7 @@ public class GUI {
   private void loadPriortyQueue() {
     if (filePath.getText().length() < 1) {
       JOptionPane.showMessageDialog(frame, "Please select a file to open.", "Error",
-              JOptionPane.ERROR_MESSAGE);
+          JOptionPane.ERROR_MESSAGE);
     } else {
       try {
         List<String> lines = Files.readAllLines(Paths.get(filePath.getText()));
@@ -1131,11 +1191,11 @@ public class GUI {
       Object[] message = { "Please enter a number to add:", inputField };
 
       int option = JOptionPane.showConfirmDialog(
-              null,
-              message,
-              "Input",
-              JOptionPane.OK_CANCEL_OPTION,
-              JOptionPane.QUESTION_MESSAGE);
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
 
       if (option == JOptionPane.OK_OPTION) {
         String result = inputField.getText().trim();
@@ -1169,7 +1229,7 @@ public class GUI {
     }
   }
 
-  private void findPriortyQueue(){
+  private void findPriortyQueue() {
     boolean validInput = false;
 
     while (!validInput) {
@@ -1177,11 +1237,11 @@ public class GUI {
       Object[] message = { "Please enter a number to add:", inputField };
 
       int option = JOptionPane.showConfirmDialog(
-              null,
-              message,
-              "Input",
-              JOptionPane.OK_CANCEL_OPTION,
-              JOptionPane.QUESTION_MESSAGE);
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
 
       if (option == JOptionPane.OK_OPTION) {
         String result = inputField.getText().trim();
@@ -1224,6 +1284,296 @@ public class GUI {
     }
   }
 
+  private void loadBinaryTree() {
+    if (filePath.getText().length() < 1) {
+      JOptionPane.showMessageDialog(frame, "Please select a file to open.", "Error",
+          JOptionPane.ERROR_MESSAGE);
+    } else {
+      try {
+        List<String> lines = Files.readAllLines(Paths.get(filePath.getText()));
+        editBox.setText(""); // Clearing the text area before loading the file content
+        binaryTree.purge();
+        for (String line : lines) {
+          binaryTree.insert(Integer.parseInt(line));
+        }
+        editBox.setText("Loaded!");
+      } catch (Exception ex) {
+        ex.printStackTrace(); // Handling exceptions by printing the stack trace
+      }
+    }
+  }
 
+  private void insertBinaryTree() {
+    boolean validInput = false;
+
+    while (!validInput) {
+      JTextField inputField = new JTextField();
+      Object[] message = { "Please enter a number to insert:", inputField };
+
+      int option = JOptionPane.showConfirmDialog(
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
+
+      if (option == JOptionPane.OK_OPTION) {
+        String result = inputField.getText().trim();
+        if (!result.isEmpty()) {
+          try {
+            binaryTree.insert(Integer.parseInt(result));
+            editBox.setText("Added!");
+            validInput = true;
+          } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid integer.");
+          }
+        } else {
+          JOptionPane.showMessageDialog(null, "No input provided. Please enter a number.");
+        }
+      } else {
+        validInput = true;
+      }
+    }
+  }
+
+  private void removeBinaryTree() {
+    boolean validInput = false;
+
+    while (!validInput) {
+      JTextField inputField = new JTextField();
+      Object[] message = { "Please enter a number to remove:", inputField };
+
+      int option = JOptionPane.showConfirmDialog(
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
+
+      if (option == JOptionPane.OK_OPTION) {
+        String result = inputField.getText().trim();
+        if (!result.isEmpty()) {
+          try {
+            ;
+            editBox.setText(binaryTree.remove(Integer.parseInt(result)));
+            validInput = true;
+          } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid integer.");
+          }
+        } else {
+          JOptionPane.showMessageDialog(null, "No input provided. Please enter a number.");
+        }
+      } else {
+        validInput = true;
+      }
+    }
+  }
+
+  private void findBinaryTree() {
+    boolean validInput = false;
+
+    while (!validInput) {
+      JTextField inputField = new JTextField();
+      Object[] message = { "Please enter a number to find:", inputField };
+
+      int option = JOptionPane.showConfirmDialog(
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
+
+      if (option == JOptionPane.OK_OPTION) {
+        String result = inputField.getText().trim();
+        if (!result.isEmpty()) {
+          try {
+            boolean found = binaryTree.contains(Integer.parseInt(result));
+            String text = result + " was " + (found ? "found in the binary !" : "not found is the binary !");
+            editBox.setText(text);
+            validInput = true;
+          } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid integer.");
+          }
+        } else {
+          JOptionPane.showMessageDialog(null, "No input provided. Please enter a number.");
+        }
+      } else {
+        validInput = true;
+      }
+    }
+  }
+
+  private void inOrderBinaryTree() {
+    try {
+      editBox.setText(binaryTree.inOrder());
+    } catch (Exception ex) {
+      ex.printStackTrace(); // Handling exceptions by printing the stack trace
+    }
+  }
+
+  private void preOrderBinaryTree() {
+    try {
+      editBox.setText(binaryTree.preOrder());
+    } catch (Exception ex) {
+      ex.printStackTrace(); // Handling exceptions by printing the stack trace
+    }
+  }
+
+  private void postOrderBinaryTree() {
+    try {
+      editBox.setText(binaryTree.postOrder());
+    } catch (Exception ex) {
+      ex.printStackTrace(); // Handling exceptions by printing the stack trace
+    }
+  }
+
+  private void loadBinarySearchTree() {
+    if (filePath.getText().length() < 1) {
+      JOptionPane.showMessageDialog(frame, "Please select a file to open.", "Error",
+          JOptionPane.ERROR_MESSAGE);
+    } else {
+      try {
+        List<String> lines = Files.readAllLines(Paths.get(filePath.getText()));
+        editBox.setText(""); // Clearing the text area before loading the file content
+        binarySearchTree.purge();
+        for (String line : lines) {
+          binarySearchTree.insert(Integer.parseInt(line));
+        }
+        editBox.setText("Loaded!");
+      } catch (Exception ex) {
+        ex.printStackTrace(); // Handling exceptions by printing the stack trace
+      }
+    }
+  }
+
+  private void insertBinarySearchTree() {
+    boolean validInput = false;
+
+    while (!validInput) {
+      JTextField inputField = new JTextField();
+      Object[] message = { "Please enter a number to insert:", inputField };
+
+      int option = JOptionPane.showConfirmDialog(
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
+
+      if (option == JOptionPane.OK_OPTION) {
+        String result = inputField.getText().trim();
+        if (!result.isEmpty()) {
+          try {
+            binarySearchTree.insert(Integer.parseInt(result));
+            editBox.setText("Added!");
+            validInput = true;
+          } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid integer.");
+          }
+        } else {
+          JOptionPane.showMessageDialog(null, "No input provided. Please enter a number.");
+        }
+      } else {
+        validInput = true;
+      }
+    }
+  }
+
+  private void removeBinarySearchTree() {
+    boolean validInput = false;
+
+    while (!validInput) {
+      JTextField inputField = new JTextField();
+      Object[] message = { "Please enter a number to remove:", inputField };
+
+      int option = JOptionPane.showConfirmDialog(
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
+
+      if (option == JOptionPane.OK_OPTION) {
+        String result = inputField.getText().trim();
+        if (!result.isEmpty()) {
+          try {
+            ;
+            editBox.setText(binarySearchTree.remove(Integer.parseInt(result)));
+            validInput = true;
+          } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid integer.");
+          }
+        } else {
+          JOptionPane.showMessageDialog(null, "No input provided. Please enter a number.");
+        }
+      } else {
+        validInput = true;
+      }
+    }
+  }
+
+  private void findBinarySearchTree() {
+    boolean validInput = false;
+
+    while (!validInput) {
+      JTextField inputField = new JTextField();
+      Object[] message = { "Please enter a number to find:", inputField };
+
+      int option = JOptionPane.showConfirmDialog(
+          null,
+          message,
+          "Input",
+          JOptionPane.OK_CANCEL_OPTION,
+          JOptionPane.QUESTION_MESSAGE);
+
+      if (option == JOptionPane.OK_OPTION) {
+        String result = inputField.getText().trim();
+        if (!result.isEmpty()) {
+          try {
+            boolean found = binarySearchTree.contains(Integer.parseInt(result));
+            String text = result + " was " + (found ? "found in the binary search tree!" : "not found is the binary search tree!");
+            editBox.setText(text);
+            validInput = true;
+          } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Invalid input. Please enter a valid integer.");
+          }
+        } else {
+          JOptionPane.showMessageDialog(null, "No input provided. Please enter a number.");
+        }
+      } else {
+        validInput = true;
+      }
+    }
+  }
+
+  private void inOrderBinarySearchTree() {
+    try {
+      editBox.setText(binarySearchTree.inOrder());
+    } catch (Exception ex) {
+      ex.printStackTrace(); // Handling exceptions by printing the stack trace
+    }
+  }
+
+  private void preOrderBinarySearchTree() {
+    try {
+      editBox.setText(binarySearchTree.preOrder());
+    } catch (Exception ex) {
+      ex.printStackTrace(); // Handling exceptions by printing the stack trace
+    }
+  }
+
+  private void postOrderBinarySearchTree() {
+    try {
+      editBox.setText(binarySearchTree.postOrder());
+    } catch (Exception ex) {
+      ex.printStackTrace(); // Handling exceptions by printing the stack trace
+    }
+  }
 
 }
