@@ -17,9 +17,8 @@ public class Main {
 		tree.insert(290);
 		tree.insert(310);
 		System.out.println(tree.inOrder());
-		// System.out.println(tree.contains(253));
-		System.out.println(tree.remove(10));
-		// tree.remove(290);
+		System.out.println(tree.remove(43));
+		System.out.println(tree.inOrder());
 
 		System.out.println("");
 	}

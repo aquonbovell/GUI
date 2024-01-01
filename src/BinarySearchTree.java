@@ -1,8 +1,5 @@
-import java.util.Queue;
-import java.util.LinkedList;
 
-public class BinarySearchTree {
-  private BinaryNode root;
+public class BinarySearchTree extends AHierarchicalADT {
 
   public BinarySearchTree() {
     root = null;
@@ -12,12 +9,12 @@ public class BinarySearchTree {
     root = null;
   }
 
-  public boolean insert(int number) {
+  public String insert(int number) {
     try {
       root = insert(root, number);
-      return true;
+      return (String.format("Inserted %d into the binary search tree.", number));
     } catch (Exception e) {
-      return false;
+      return (String.format("Could not insert %d into the binary search tree.\n%s", number, e.getMessage()));
     }
   }
 
@@ -76,7 +73,7 @@ public class BinarySearchTree {
           return parent;
         } else {
           parent.setLeft(node.getRight());
-          node.setRight(parent);
+          return deleteNode;
         }
       }
       return node;
@@ -84,105 +81,25 @@ public class BinarySearchTree {
     return node;
   }
 
-  public boolean contains(int key) {
+  public String contains(int key) {
     if (root == null) {
-      return false;
+      return ("The binary search tree is empty!");
     } else {
       return contains(root, key);
     }
   }
 
-  private boolean contains(BinaryNode node, int key) {
+  private String contains(BinaryNode node, int key) {
+    
     if (node.getValue() == key) {
-      return true;
+      return (String.format("The binary search tree contains %d.", key));
     }
     if (node.getLeft() != null) {
-      if (contains(node.getLeft(), key)) {
-        return true;
-      }
+      return contains(node.getLeft(), key);
     }
     if (node.getRight() != null) {
-      if (contains(node.getRight(), key)) {
-        return true;
-      }
+      return contains(node.getRight(), key);
     }
-    return false;
-  }
-
-  public String levelOrder() {
-    if (root == null) {
-      return ("The binary search tree is empty!");
-    }
-    String result = "";
-    Queue<BinaryNode> queue = new LinkedList<BinaryNode>();
-    queue.add(root);
-    while (!queue.isEmpty()) {
-      BinaryNode node = queue.remove();
-      result += (node.getValue() + ", ");
-      if (node.getLeft() != null) {
-        queue.add(node.getLeft());
-      }
-      if (node.getRight() != null) {
-        queue.add(node.getRight());
-      }
-    }
-    return result;
-  }
-
-  public String inOrder() {
-    if (root == null) {
-      return ("The binary search tree is empty!");
-    }
-    return inOrder(root);
-  }
-
-  private String inOrder(BinaryNode node) {
-    String result = "";
-    if (node.getLeft() != null) {
-      result += inOrder(node.getLeft());
-    }
-    result += (node.getValue() + ", ");
-    if (node.getRight() != null) {
-      result += inOrder(node.getRight());
-    }
-    return result;
-  }
-
-  public String preOrder() {
-    if (root == null) {
-      return ("The binary search tree is empty!");
-    }
-    return preOrder(root);
-  }
-
-  private String preOrder(BinaryNode node) {
-    String result = "";
-    result += (node.getValue() + ", ");
-    if (node.getLeft() != null) {
-      result += preOrder(node.getLeft());
-    }
-    if (node.getRight() != null) {
-      result += preOrder(node.getRight());
-    }
-    return result;
-  }
-
-  public String postOrder() {
-    if (root == null) {
-      return ("The binary search tree is empty!");
-    }
-    return postOrder(root);
-  }
-
-  private String postOrder(BinaryNode node) {
-    String result = "";
-    if (node.getLeft() != null) {
-      result += postOrder(node.getLeft());
-    }
-    if (node.getRight() != null) {
-      result += postOrder(node.getRight());
-    }
-    result += (node.getValue() + ", ");
-    return result;
+    return (String.format("The binary search tree does not contain %d.", key));
   }
 }

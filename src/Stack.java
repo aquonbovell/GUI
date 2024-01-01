@@ -1,110 +1,125 @@
-public class Stack {
+public class Stack extends ALinearADT {
   private Node _head;
 
   public Stack() {
     _head = null;
   }
 
-  public void push(int number) {
-    Node current = _head;
-    _head = new Node(number);
-    _head.setNext(current);
+  @Override
+  public String add(int number) {
+    try {
+      Node current = _head;
+      _head = new Node(number);
+      _head.setNext(current);
+      return (String.format("Added %d to the stack.", number));
+    } catch (Exception e) {
+      return (String.format("Could not add %d to the stack.\n%s", number, e.getMessage()));
+    }
   }
 
-  public String pop() {
-    if (_head == null) {
-      return ("The stack is empty.");
+  @Override
+  public String remove(int key) {
+    throw new UnsupportedOperationException("Stack does not support remove(int key).");
+  }
+
+  @Override
+  public String remove() {
+    try {
+      if (_head == null) {
+        return ("The stack is empty.");
+      }
+      int result = _head.getValue();
+      _head = _head.getNext();
+      return (String.format("Popped %d from the stack.", result));
+    } catch (Exception e) {
+      return (String.format("Could not pop from the stack.\n%s", e.getMessage()));
     }
-    int result = _head.getValue();
-    _head = _head.getNext();
-    return (String.format("Popped %d from the stack.", result));
+  }
+
+  @Override
+  public String contains(int key) {
+    try {
+      if (_head == null) {
+        return ("The stack is empty.");
+      }
+      Node current;
+      for (current = _head; current != null; current = current.getNext()) {
+        if (current.getValue() == key) {
+          return (String.format("The stack contains %d.", key));
+        }
+      }
+      return (String.format("The stack does not contain %d.", key));
+
+    } catch (Exception e) {
+      return (String.format("Could not check if the stack contains %d.\n%s", key, e.getMessage()));
+    }
+  }
+
+  @Override
+  public int size() {
+    try {
+      int size = 0;
+      Node current;
+      for (current = _head; current != null; current = current.getNext()) {
+        size++;
+      }
+      return (size);
+    } catch (Exception e) {
+      return (-1);
+    }
+  }
+
+  @Override
+  public String isEmpty() {
+    try {
+      if (_head == null) {
+        return ("The stack is empty.");
+      }
+      return ("The stack is not empty.");
+    } catch (Exception e) {
+      return (String.format("Could not check if the stack is empty.\n%s", e.getMessage()));
+    }
+  }
+
+  @Override
+  public void purge() {
+    _head = null;
+  }
+
+  @Override
+  public int[] toArray() {
+    try {
+      int[] result = new int[size()];
+      int index = 0;
+      Node current;
+      for (current = _head; current != null; current = current.getNext()) {
+        result[index++] = current.getValue();
+      }
+      return (result);
+    } catch (Exception e) {
+      return (new int[0]);
+    }
+  }
+
+  @Override
+  public String toString() {
+    String result = "";
+    Node current;
+    for (current = _head; current != null; current = current.getNext()) {
+      result += String.format("%d, ", current.getValue());
+    }
+    return (result);
   }
 
   public String peek() {
-    if (_head == null) {
-      return ("The stack is empty.");
-    }
-    return (String.format("Peeked %d from the stack.", _head.getValue()));
-  }
-
-  public boolean isEmpty() {
-    if (_head == null) {
-      return (true);
-    }
-    return (false);
-  }
-
-  public String showNodes() {
-    if (_head == null) {
-      return ("The stack is empty.");
-    } else {
-      String result = "";
-      Node current;
-      for (current = _head; current != null; current = current.getNext()) {
-        result += (current.getValue() + ", ");
+    try {
+      if (_head == null) {
+        return ("The stack is empty.");
       }
-      return result;
+      return (String.format("Peeked %d from the stack.", _head.getValue()));
+    } catch (Exception e) {
+      return (String.format("Could not peek from the stack.\n%s", e.getMessage()));
     }
-  }
-
-  public boolean find(int key) {
-    if (_head == null) {
-      return false;
-    } else if (_head.getValue() == key) {
-      return true;
-    } else {
-      Node current;
-      for (current = _head; current != null; current = current.getNext()) {
-        if (current.getValue() == key) {
-          return true;
-        }
-      }
-      return false;
-    }
-  }
-
-  public int getHead() {
-    return _head.getValue();
-  }
-
-  public int getTail() {
-    Node current;
-    for (current = _head; current.getNext() != null; current = current.getNext())
-      ;
-    return current.getValue();
-  }
-
-  public boolean deleteNode(int key) {
-    if (_head == null) {
-      return false;
-    } else if (_head.getValue() == key && _head.getNext() == null) {
-      _head = null;
-      return true;
-    } else if (_head.getValue() == key) {
-      _head = _head.getNext();
-      return true;
-    } else {
-      Node current;
-      Node previous = _head;
-      for (current = _head.getNext(); current.getNext() != null;) {
-        if (current.getValue() == key) {
-          previous.setNext(current.getNext());
-          return true;
-        } else {
-          current = current.getNext();
-          previous = previous.getNext();
-        }
-      }
-      if (current.getValue() == key) {
-        previous.setNext(null);
-        return true;
-      }
-      return false;
-    }
-  }
-
-  public void purge() {
-    _head = null;
   }
 
 }
