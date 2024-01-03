@@ -1,4 +1,6 @@
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,11 +17,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.border.Border;
 import javax.swing.filechooser.FileFilter;
 
-public class GUI {
+public class GUI extends JFrame {
+  final private Font font = new Font("Apple Casual", Font.BOLD, 12);
   // Declaring private member variables
-  public JFrame frame;
+  private String title;
+  private int width;
+  private int height;
   public JMenuBar menuBar;
   public JMenu linearADTs;
   public JMenu hierarchicalADTs;
@@ -31,60 +37,100 @@ public class GUI {
 
   // Constructor to initialize the GUI with specified title, width, and height
   public GUI(String title, int width, int height) {
-    // Initializing the JFrame and setting its properties
-    frame = new JFrame(title);
-    frame.setResizable(false);
-    frame.setLayout(null); // Using null layout
+    this.title = title;
+    this.width = width;
+    this.height = height;
 
-    // Creating and setting up the menu bar
+  }
+
+  // Method to initialize the GUI
+  public void init() {
+    // Setting menu bar properties
     menuBar = new JMenuBar();
+    menuBar.setLayout(new WrapLayout(WrapLayout.LEFT, 0, 0));
     menuBar.add(createFileOptions());
     linearADTHandler = new LinearADTHandler(this);
     hierarchicalADTHandler = new HierarchicalADTHandler(this);
     menuBar.add(linearADTHandler.createLinearADTOptions());
     menuBar.add(hierarchicalADTHandler.createHierarchicalADTOptions());
-    frame.setJMenuBar(menuBar);
+    setJMenuBar(menuBar);
 
-    // Creating components for file path display, file label, and text editing
-    fileLabel = new JLabel("File Name:  ");
-    fileLabel.setBounds(5, 0, 75, 20);
+    // Setting main panel attributes
+    JPanel mainPanel = new JPanel();
+    mainPanel.setLayout(new BorderLayout(0, 5));
+    add(mainPanel);
 
-    filePath = new JTextField();
-    filePath.setEditable(false);
-    filePath.setCursor(null);
-    fileLabel.setLabelFor(filePath);
-    filePath.setBounds(80, 0, width - 150, 20);
+    // Setting file panel attributes
+    JPanel filePanel = new JPanel();
+    filePanel.setLayout(new BorderLayout(5, 0));
+    filePanel.setBorder(
+        new Border() {
+          @Override
+          public void paintBorder(java.awt.Component c, java.awt.Graphics g, int x, int y, int width, int height) {
 
+          }
+
+          @Override
+          public boolean isBorderOpaque() {
+            return true;
+          }
+
+          @Override
+          public java.awt.Insets getBorderInsets(java.awt.Component c) {
+            return new java.awt.Insets(0, 5, 0, 5);
+          }
+
+        });
+    fileLabel = new JLabel("File Path:");
+    filePath = new JTextField(20);
+    fileLabel.setFont(font);
+    filePath.setFont(font);
+    filePanel.add(fileLabel, BorderLayout.WEST);
+    filePanel.add(filePath, 1);
+
+    // Setting edit panel attributes
+    JPanel editPanel = new JPanel();
+    editPanel.setLayout(new BorderLayout(0, 5));
+    JScrollPane scrollPane = new JScrollPane();
+    scrollPane.setBorder(
+        new Border() {
+          @Override
+          public void paintBorder(java.awt.Component c, java.awt.Graphics g, int x, int y, int width, int height) {
+            g.setColor(java.awt.Color.LIGHT_GRAY);
+            g.drawRect(x + 4, y, width - 9, height - 5);
+          }
+
+          @Override
+          public boolean isBorderOpaque() {
+            return true;
+          }
+
+          @Override
+          public java.awt.Insets getBorderInsets(java.awt.Component c) {
+            return new java.awt.Insets(1, 5, 5, 5);
+          }
+
+        });
     editBox = new JTextArea();
     editBox.setLineWrap(true);
     editBox.setWrapStyleWord(true);
     editBox.setTabSize(1);
+    editBox.setFont(font);
+    scrollPane.setViewportView(editBox);
+    editPanel.add(new JLabel("  Display:"), BorderLayout.NORTH);
+    editPanel.add(scrollPane, BorderLayout.CENTER);
 
-    // Creating a scroll pane for the text area and setting its bounds
-    JScrollPane scrollPane = new JScrollPane(editBox);
-    scrollPane.setBounds(5, 30, width - 25, height - 100);
+    // Adding panels to the main panel
+    mainPanel.add(filePanel, BorderLayout.NORTH);
+    mainPanel.add(editPanel, BorderLayout.CENTER);
 
-    // Creating a panel to contain the file label and file path field
-    JPanel panel = new JPanel();
-    panel.setBounds(5, 5, width - 25, 20);
-    panel.setLayout(new BorderLayout());
-    panel.add(fileLabel, BorderLayout.LINE_START);
-    panel.add(filePath, 1);
-
-    // Adding components to the frame
-    frame.add(panel);
-    frame.add(scrollPane);
-
-    // Setting frame properties
-    frame.setTitle(title);
-    frame.setSize(width, height);
-    frame.setLocationRelativeTo(null);
-    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-  }
-
-  // Method to set GUI visibility
-  public void setVisible(boolean visible) {
-    frame.setVisible(visible);
+    // Setting frame attributes
+    setTitle(title);
+    setMinimumSize(new Dimension(width, height));
+    setLocationRelativeTo(null);
+    setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    pack();
+    setVisible(true);
   }
 
   // Method to create file options in the menu
@@ -95,6 +141,12 @@ public class GUI {
     JMenuItem save = new JMenuItem("Save");
     JMenuItem saveAs = new JMenuItem("Save As");
     JMenuItem exit = new JMenuItem("Exit");
+    file.setFont(font);
+    open.setFont(font);
+    display.setFont(font);
+    save.setFont(font);
+    saveAs.setFont(font);
+    exit.setFont(font);
     file.add(open);
     file.add(display);
     file.add(save);
@@ -112,7 +164,8 @@ public class GUI {
   private void openFile() {
     JFileChooser fileChooser = new JFileChooser("./");
     // Creating file filters for different file types
-    FileFilter[] filters = createFileFilters(".txt", "Text Files (*.txt)", ".csv", "CSV Files (*.csv)", ".dat",
+    FileFilter[] filters = createFileFilters(".txt", "Text Files (*.txt)",
+        ".csv", "CSV Files (*.csv)", ".dat",
         "DAT Files (*.dat)");
     for (FileFilter filter : filters) {
       fileChooser.addChoosableFileFilter(filter);
@@ -139,7 +192,8 @@ public class GUI {
   private void saveAsFile() {
     JFileChooser fileChooser = new JFileChooser("./");
     // Creating file filters for different file types
-    FileFilter[] filters = createFileFilters(".txt", "Text Files (*.txt)", ".csv", "CSV Files (*.csv)", ".dat",
+    FileFilter[] filters = createFileFilters(".txt", "Text Files (*.txt)",
+        ".csv", "CSV Files (*.csv)", ".dat",
         "DAT Files (*.dat)");
     for (FileFilter filter : filters) {
       fileChooser.addChoosableFileFilter(filter);
@@ -158,7 +212,8 @@ public class GUI {
         }
         String extension = ".txt";
         if (fileFilter.contains("(*.")) {
-          extension = fileFilter.substring(fileFilter.indexOf("*") + 1, fileFilter.indexOf(")"));
+          extension = fileFilter.substring(fileFilter.indexOf("*") + 1,
+              fileFilter.indexOf(")"));
         }
         fileName += extension;
       }
@@ -203,7 +258,8 @@ public class GUI {
   // Method to load the contents of a selected file into the text area
   private void loadFile(JTextArea mainEditBox) {
     if (filePath.getText().length() < 1) {
-      JOptionPane.showMessageDialog(frame, "Please select a file to open.", "Error",
+      JOptionPane.showMessageDialog(this, "Please select a file to open.",
+          "Error",
           JOptionPane.ERROR_MESSAGE);
     } else {
       try {
@@ -221,7 +277,8 @@ public class GUI {
   // Method to save the contents of the text area to a file
   private void saveFile(JTextArea mainEditBox) {
     if (filePath.getText().length() < 1) {
-      JOptionPane.showMessageDialog(frame, "Please select a file to save to.", "Error",
+      JOptionPane.showMessageDialog(this, "Please select a file to save to.",
+          "Error",
           JOptionPane.ERROR_MESSAGE);
     } else {
       try {
@@ -237,7 +294,7 @@ public class GUI {
   private void saveFileAs(JTextArea mainEditBox, String filePath) {
     File file = new File(filePath);
     if (file.exists()) {
-      int result = JOptionPane.showConfirmDialog(frame, "File already exists. Do you want to overwrite it?",
+      int result = JOptionPane.showConfirmDialog(this, "File already exists. Do you want to overwrite it?",
           "File Exists", JOptionPane.YES_NO_OPTION);
       if (result == JOptionPane.NO_OPTION) {
         return; // User chooses not to overwrite the file

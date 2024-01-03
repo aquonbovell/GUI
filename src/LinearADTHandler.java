@@ -64,7 +64,7 @@ public class LinearADTHandler {
 
   private void load(ALinearADT object) {
     if (gui.filePath.getText().length() < 1) {
-      JOptionPane.showMessageDialog(gui.frame, "Please select a file to open.", "Error",
+      JOptionPane.showMessageDialog(gui, "Please select a file to open.", "Error",
           JOptionPane.ERROR_MESSAGE);
     } else {
       try {
@@ -202,7 +202,7 @@ public class LinearADTHandler {
 
   private void display(ALinearADT object) {
     if (gui.editBox.getText().length() < 1) {
-      JOptionPane.showMessageDialog(gui.frame, "Please enter a number to display.", "Error",
+      JOptionPane.showMessageDialog(gui, "Please enter a number to display.", "Error",
           JOptionPane.ERROR_MESSAGE);
     } else {
       try {

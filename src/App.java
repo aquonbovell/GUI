@@ -14,9 +14,9 @@ public class App {
 	// Method to initialize the application
 	public void init() {
 		// Creating a new GUI object with a title "Data Structures: GUI" and dimensions
-		// 900x600
-		app = new GUI("Data Structures: GUI", 900, 600);
+		// 400x300
+		app = new GUI("Data Structures: GUI", 400, 300);
+		app.init();
 		// Setting the visibility of the GUI to true, making it visible on the screen
-		app.setVisible(true);
 	}
 }
